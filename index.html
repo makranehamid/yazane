@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Apprendre le Français avec Amico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', sans-serif;
+            overflow: hidden;
+            background-color: #f0f9ff;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .screen.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .btn-bounce {
+            transition: transform 0.1s ease;
+        }
+
+        .btn-bounce:active {
+            transform: scale(0.9);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .reward-star {
+            position: absolute;
+            pointer-events: none;
+            animation: star-pop 1s ease-out forwards;
+        }
+
+        @keyframes star-pop {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Custom overlays */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 4px solid white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Home Screen -->
+    <div id="home-screen" class="screen active flex-col items-center justify-between p-6"
+        style="background-image: url('assets/home_bg.png');">
+        <div class="w-full flex flex-col items-center mt-10">
+            <h1 class="text-5xl md:text-7xl font-bold text-white drop-shadow-[0_6px_6px_rgba(0,0,0,0.6)] text-center">
+                Amico Français
+            </h1>
+            <p class="text-white text-2xl font-semibold mt-2 drop-shadow-md">Apprendre en s'amusant !</p>
+        </div>
+
+        <div class="flex flex-col items-center gap-6 mb-16 w-full max-w-sm">
+            <button onclick="showLevelSelect()"
+                class="btn-bounce w-full bg-orange-500 text-white py-6 rounded-3xl text-4xl font-bold shadow-[0_10px_0_rgb(194,65,12)] border-4 border-white">
+                JOUER
+            </button>
+            <div class="flex gap-4 w-full">
+                <button onclick="showPlaceholder('Leçons')"
+                    class="btn-bounce flex-1 bg-blue-500 text-white py-4 rounded-2xl text-xl font-bold shadow-[0_6px_0_rgb(29,78,216)] border-4 border-white">
+                    📖 LEÇONS
+                </button>
+                <button onclick="showPlaceholder('Progrès')"
+                    class="btn-bounce flex-1 bg-purple-500 text-white py-4 rounded-2xl text-xl font-bold shadow-[0_6px_0_rgb(126,34,206)] border-4 border-white">
+                    🏆 PROGRÈS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Select Screen -->
+    <div id="level-select-screen"
+        class="screen flex-col items-center justify-center p-6 bg-blue-100/50 backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-[40px] shadow-2xl max-w-2xl w-full text-center relative">
+            <button onclick="hideLevelSelect()"
+                class="absolute -top-4 -right-4 bg-white text-orange-500 p-2 rounded-full shadow-lg border-4 border-orange-500 font-bold text-xl w-12 h-12 flex items-center justify-center">X</button>
+            <h2 class="text-4xl font-bold text-orange-600 mb-8">Choisis ton aventure !</h2>
+
+            <div class="grid grid-cols-2 gap-6">
+                <button onclick="goToLevel(1)"
+                    class="btn-bounce bg-yellow-400 p-6 rounded-3xl border-4 border-white shadow-lg text-center">
+                    <div class="text-5xl mb-2">🎒</div>
+                    <div class="font-bold text-yellow-900">NIVEAU 1</div>
+                </button>
+                <button onclick="goToLevel(2)"
+                    class="btn-bounce bg-green-400 p-6 rounded-3xl border-4 border-white shadow-lg text-center">
+                    <div class="text-5xl mb-2">🏠</div>
+                    <div class="font-bold text-green-900">NIVEAU 2</div>
+                </button>
+                <button onclick="goToLevel(3)"
+                    class="btn-bounce bg-red-400 p-6 rounded-3xl border-4 border-white shadow-lg text-center">
+                    <div class="text-5xl mb-2">🍏</div>
+                    <div class="font-bold text-red-900">NIVEAU 3</div>
+                </button>
+                <button onclick="goToLevel(4)"
+                    class="btn-bounce bg-purple-400 p-6 rounded-3xl border-4 border-white shadow-lg text-center">
+                    <div class="text-5xl mb-2">🌳</div>
+                    <div class="font-bold text-purple-900">NIVEAU 4</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gameplay Screen -->
+    <div id="level-screen" class="screen flex-col items-center justify-center p-6 bg-cover bg-center">
+        <!-- Floating Amico or Avatar could be here -->
+
+        <div id="quiz-container"
+            class="glass-panel p-8 rounded-[40px] shadow-2xl max-w-2xl w-full text-center relative mt-10">
+            <button onclick="goHome()"
+                class="absolute -top-6 -left-6 bg-red-500 text-white p-4 rounded-full shadow-lg border-4 border-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </button>
+
+            <!-- Repeat Audio Button -->
+            <button onclick="repeatQuestion()"
+                class="absolute -top-6 -right-6 bg-yellow-400 text-white p-4 rounded-full shadow-lg border-4 border-white btn-bounce">
+                <span class="text-3xl">🔊</span>
+            </button>
+
+            <h2 id="task-text" class="text-3xl font-bold text-orange-600 mb-8 px-4">
+                Choisis <span id="target-word" class="text-blue-600">...</span>
+            </h2>
+
+            <div id="options-grid" class="grid grid-cols-2 gap-8 px-2">
+                <!-- Question options -->
+            </div>
+        </div>
+
+        <!-- Progress indicator -->
+        <div class="mt-8 bg-white/50 px-6 py-2 rounded-full border-2 border-white text-orange-700 font-bold">
+            Amico t'encourage ! ✨
+        </div>
+
+        <!-- Success Animation Overlay -->
+        <div id="success-overlay" class="fixed inset-0 bg-black/40 hidden flex items-center justify-center z-50">
+            <div
+                class="bg-white p-12 rounded-full shadow-2xl border-4 border-yellow-400 animate-bounce flex flex-col items-center">
+                <div class="text-9xl mb-4">🌟</div>
+                <div class="text-4xl font-bold text-green-600">BRAVO !</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function showLevelSelect() {
+            document.getElementById('level-select-screen').classList.add('active');
+            speak("Choisis ton niveau !");
+        }
+        function hideLevelSelect() {
+            document.getElementById('level-select-screen').classList.remove('active');
+        }
+    </script>
+</body>
+
+</html>
