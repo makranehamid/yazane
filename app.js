@@ -4,7 +4,7 @@ let score = 0;
 let currentQuestionIndex = 0;
 
 /**
- * Full 12-level pedagogical structure
+ * Full 12-level pedagogical structure with fixes for accuracy
  */
 const levelData = {
     1: {
@@ -14,7 +14,16 @@ const levelData = {
         questions: [
             { prompt: "Où est le cartable d'Amico ?", target: "le cartable", options: ["🎒", "🚲", "🏠"], correct: 0 },
             { prompt: "Que fait la maîtresse ? Elle lit ou elle chante ?", target: "Elle lit", options: ["📖", "🎤"], correct: 0 },
-            { prompt: "Trouve la gomme bleue.", target: "la gomme bleue", options: ["✏️", "🎨", "🧽"], correct: 2 }
+            {
+                prompt: "Trouve la gomme bleue.",
+                target: "la gomme bleue",
+                options: [
+                    `<div class="w-20 h-10 bg-blue-500 rounded-sm shadow-inner border-2 border-blue-600"></div>`, // Custom Blue Eraser
+                    `<div class="w-20 h-10 bg-pink-500 rounded-sm shadow-inner border-2 border-pink-600"></div>`,
+                    `<div class="w-16 h-16 bg-yellow-400 rounded-full border-4 border-yellow-600 flex items-center justify-center text-xl">🎨</div>`
+                ],
+                correct: 0
+            }
         ]
     },
     2: {
@@ -24,7 +33,16 @@ const levelData = {
         questions: [
             { prompt: "C'est ma maman, elle porte un tablier. Touche la maman.", target: "la maman", options: ["👨", "👩‍🍳", "👵"], correct: 1 },
             { prompt: "Mon frère joue au ballon. Où est-il ?", target: "Mon frère", options: ["👧", "👦⚽", "👶"], correct: 1 },
-            { prompt: "Voici ma maison. Elle a une porte marron.", target: "porte marron", options: ["🚪🟫", "🚪🔴", "🚪🔵"], correct: 0 }
+            {
+                prompt: "Voici ma maison. Elle a une porte verte.",
+                target: "porte verte",
+                options: [
+                    `<div class="w-16 h-24 bg-green-600 border-4 border-green-800 rounded-t-lg relative flex items-center justify-end px-2"><div class="w-3 h-3 bg-yellow-400 rounded-full"></div></div>`, // Green Door
+                    `<div class="w-16 h-24 bg-red-600 border-4 border-red-800 rounded-t-lg relative flex items-center justify-end px-2"><div class="w-3 h-3 bg-yellow-400 rounded-full"></div></div>`,
+                    `<div class="w-16 h-24 bg-blue-600 border-4 border-blue-800 rounded-t-lg relative flex items-center justify-end px-2"><div class="w-3 h-3 bg-yellow-400 rounded-full"></div></div>`
+                ],
+                correct: 0
+            }
         ]
     },
     3: {
@@ -33,8 +51,8 @@ const levelData = {
         bg: "assets/level_3_bg.png",
         questions: [
             { prompt: "Je voudrais quatre bananes. Aide Amico à compter.", target: "quatre bananes", options: ["🍌", "🍌🍌", "🍌🍌🍌🍌"], correct: 2 },
-            { prompt: "Choisis le marchand qui sourit.", target: "marchand", options: ["😊", "😠"], correct: 0 },
-            { prompt: "Le jus d'orange est frais. Touche le verre.", target: "le verre", options: ["🥤", "🍶", "🍵"], correct: 0 }
+            { prompt: "Choisis le marchand qui sourit.", target: "marchand", options: ["👨‍🌾😊", "👨‍🌾😠"], correct: 0 },
+            { prompt: "Le jus d'orange est plein de vitamines. Touche le verre de jus.", target: "le verre", options: ["🥛", "🍹", "🍵"], correct: 1 } // 🍹 as orange juice
         ]
     },
     4: {
@@ -44,7 +62,7 @@ const levelData = {
         questions: [
             { prompt: "Le mouton est blanc et frisé. Touche le mouton.", target: "le mouton", options: ["🐄", "🐎", "🐑"], correct: 2 },
             { prompt: "Le coq réveille Amico. Quel bruit fait-il ?", target: "cocorico", options: ["🐓", "🐤", "🦆"], correct: 0 },
-            { prompt: "La vache donne du lait. C'est délicieux !", target: "la vache", options: ["🥛", "🐄"], correct: 1 }
+            { prompt: "La vache donne du lait. Touche la vache.", target: "la vache", options: ["🥛", "🐄"], correct: 1 }
         ]
     },
     5: {
@@ -64,7 +82,7 @@ const levelData = {
         questions: [
             { prompt: "Il y a des nuages et il pleut. Vite, trouve l'imperméable !", target: "l'imperméable", options: ["🧥", "🕶️", "🧢"], correct: 0 },
             { prompt: "Il fait très chaud. Amico doit mettre son chapeau.", target: "son chapeau", options: ["👒", "🧤", "🧣"], correct: 0 },
-            { prompt: "En automne, les feuilles tombent des arbres. De quelle couleur sont-elles ?", target: "jaunes", options: ["🌿", "🍂"], correct: 1 }
+            { prompt: "En automne, les feuilles tombent des arbres. De quelle couleur sont-elles ?", target: "marrons", options: ["🌿", "🍂"], correct: 1 }
         ]
     },
     7: {
@@ -72,8 +90,17 @@ const levelData = {
         title: "En Route !",
         bg: "assets/home_bg.png",
         questions: [
-            { prompt: "Le bus est jaune et très grand. Monte dans le bus.", target: "le bus", options: ["🚗", "🚲", "🚌"], correct: 2 },
-            { prompt: "Attends ! Le feu est rouge, il faut s'arrêter.", target: "feu rouge", options: ["🔴", "🟢"], correct: 0 },
+            {
+                prompt: "Le bus est jaune et très grand. Monte dans le bus.",
+                target: "le bus",
+                options: [
+                    `<div class="text-6xl filter sepia saturate-200 hue-rotate-30">🚌</div>`, // Yellow-ish Bus
+                    "🚗",
+                    "🚲"
+                ],
+                correct: 0
+            },
+            { prompt: "Attends ! Le feu est rouge, il faut s'arrêter.", target: "feu rouge", options: ["🛑", "🟢"], correct: 0 },
             { prompt: "Amico va à la plage en voiture avec son papa.", target: "la voiture", options: ["🚗", "✈️", "🚢"], correct: 0 }
         ]
     },
@@ -104,7 +131,16 @@ const levelData = {
         questions: [
             { prompt: "Regarde la Lune dans le ciel. Elle brille la nuit.", target: "la Lune", options: ["🌙", "☀️", "☁️"], correct: 0 },
             { prompt: "La fusée part très haut ! Touche la fusée.", target: "la fusée", options: ["🚀", "🚁", "⛵"], correct: 0 },
-            { prompt: "Compte les étoiles. Peux-tu en trouver cinq ?", target: "cinq", options: ["⭐", "⭐⭐⭐", "⭐⭐⭐⭐⭐"], correct: 2 }
+            {
+                prompt: "Peux-tu compter cinq étoiles ?",
+                target: "cinq étoiles",
+                options: [
+                    "⭐",
+                    "⭐⭐⭐",
+                    `<div class="flex flex-wrap justify-center gap-1 w-24">⭐⭐<br>⭐⭐⭐</div>` // Better layout
+                ],
+                correct: 2
+            }
         ]
     },
     11: {
@@ -112,8 +148,8 @@ const levelData = {
         title: "Calendrier Magique",
         bg: "assets/home_bg.png",
         questions: [
-            { prompt: "Le matin, je prends mon petit-déjeuner. Que mange Amico ?", target: "petit-déjeuner", options: ["🥣", "🍛", "🍕"], correct: 0 },
-            { prompt: "Aujourd'hui c'est Lundi, demain c'est Mardi. Répète après Amico.", target: "Mardi", options: ["📅", "🗓️"], correct: 0 }, // Placeholder logic
+            { prompt: "Le matin, je prends mon petit-déjeuner. Choisis le bol de céréales.", target: "petit-déjeuner", options: ["🥣🥛", "🍛", "🍕"], correct: 0 },
+            { prompt: "Écoute bien : Lundi, Mardi... Quel jour vient après ?", target: "Mardi", options: ["📅", "🗓️"], correct: 0 },
             { prompt: "C'est l'heure de dormir. Bonne nuit !", target: "dormir", options: ["🛌", "🏃", "🎮"], correct: 0 }
         ]
     },
@@ -187,7 +223,7 @@ function loadQuestion() {
     grid.className = (question.options.length <= 2) ? "grid grid-cols-2 gap-8 px-10" : "grid grid-cols-3 gap-6 px-2";
     question.options.forEach((content, index) => {
         const btn = document.createElement('button');
-        btn.className = "btn-bounce bg-white hover:bg-orange-50 p-6 md:p-8 rounded-3xl text-5xl md:text-6xl shadow-xl transition-all border-4 border-transparent active:border-orange-400 flex items-center justify-center";
+        btn.className = "btn-bounce bg-white hover:bg-orange-50 p-6 md:p-8 rounded-3xl text-5xl md:text-6xl shadow-xl transition-all border-4 border-transparent active:border-orange-400 flex items-center justify-center min-h-[140px]";
         btn.innerHTML = content;
         btn.onclick = () => checkAnswer(index);
         grid.appendChild(btn);
